@@ -1,0 +1,37 @@
+name: Nodejs CICD setup
+
+on:
+  push:
+    branches:
+        - main
+  pull_request:
+    branches:
+        - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      -name: Checkout repo
+       uses: actions/checkout@v2
+
+      -name: Set up node js
+       uses: actions/setup-node@v3
+       with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          npm install
+      
+      - name: Run the app (test if it starts correctly)
+        run: |
+          npm start &
+          sleep 5
+          curl http://localhost:4500
+          kill $!
+      
+      - name: Run tests (optional)
+        run: |
+          # Add a simple test or any script to run tests if you have them
+          echo "Add tests here"     
